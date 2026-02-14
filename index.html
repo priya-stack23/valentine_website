@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Our Love Story ❤️</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right,#ff9a9e,#fad0c4);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    cursor:url('https://i.ibb.co/z4YsjhF/heart-cursor.png'), auto;
+}
+
+/* Floating hearts */
+.heart{
+    position: fixed;
+    bottom:-50px;
+    font-size:20px;
+    animation: floatUp 6s linear infinite;
+    transform-origin:center;
+}
+@keyframes floatUp{
+    0%{ transform:translateY(0) rotate(0deg); opacity:1; }
+    50%{ transform:rotate(15deg); }
+    100%{ transform:translateY(-100vh) rotate(30deg); opacity:0; }
+}
+
+/* Sparkles */
+.sparkle{
+    position:fixed;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    pointer-events:none;
+    animation: twinkle 2s infinite;
+}
+@keyframes twinkle{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* Fireworks */
+.particle{
+    position:fixed;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+}
+
+/* Card */
+.card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    width:500px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    position:relative;
+    z-index:10;
+}
+
+h1{ color:#ff4d6d; margin-bottom:10px; }
+h2{ color:#ff4d6d; margin:10px 0; }
+
+.hero{
+    width:220px;
+    margin:15px 0;
+}
+
+.btn{
+    padding:12px 25px;
+    border:none;
+    border-radius:10px;
+    font-size:16px;
+    margin:10px;
+    cursor:pointer;
+    transition: 0.3s;
+}
+.btn.primary:hover{
+    box-shadow: 0 0 15px #ff4d6d;
+    transform: scale(1.05);
+}
+.btn.secondary:hover{
+    box-shadow: 0 0 15px #ccc;
+    transform: scale(1.05);
+}
+
+.slide{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+#slideMessage{
+    color:#ff4d6d;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+#noMessage{
+    color:#ff4d6d;
+    font-weight:bold;
+    height:24px;
+}
+
+/* Love letter CSS */
+#loveLetter {
+    font-size: 14px;      /* smaller font to fit screen */
+    line-height: 1.5;
+    text-align: center;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mp3">
+</audio>
+
+<div class="card" id="card">
+    <h1>To my favourite person ❤️</h1>
+    <img src="couple.png" class="hero">
+    <p>Viki, will you be my forever valentine?</p>
+    <p id="noMessage"></p>
+    <button class="btn primary" id="yesBtn">Yes 💘</button>
+    <button class="btn secondary" id="noBtn">No 😢</button>
+</div>
+
+<script>
+/* Floating hearts */
+function createHeart(){
+    const heart=document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML="💖";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(Math.random()*3+3)+"s";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,300);
+
+/* Sparkles */
+function createSparkle(){
+    const s=document.createElement("div");
+    s.classList.add("sparkle");
+    s.style.left=Math.random()*100+"vw";
+    s.style.top=Math.random()*100+"vh";
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),2000);
+}
+setInterval(createSparkle,150);
+
+/* Runaway NO button */
+const noBtn=document.getElementById("noBtn");
+const noMessage=document.getElementById("noMessage");
+const card=document.getElementById("card");
+const messages=[
+"Please don’t click No 🥺",
+"Are you really sure? 😢",
+"Think again my love 💔",
+"You can’t change your destiny 😌",
+"The Yes button looks better 😉",
+"I’ll keep running forever 😝",
+"Just click Yes already ❤️"
+];
+let msgIndex=0;
+
+noBtn.addEventListener("mouseover",()=>{
+    noMessage.innerText = messages[msgIndex];
+    msgIndex = (msgIndex+1)%messages.length;
+
+    const cardRect = card.getBoundingClientRect();
+    const maxX = cardRect.width - 120;
+    const maxY = cardRect.height - 80;
+
+    noBtn.style.position="absolute";
+    noBtn.style.left = Math.random()*maxX + "px";
+    noBtn.style.top = Math.random()*maxY + "px";
+});
+
+/* Fireworks */
+function createFirework(x,y){
+    const colors = ["#ff4d6d","#ffb6c1","#ffd700","#ff69b4","#ff8c00","#ff1493","#ff4500"];
+    for(let i=0;i<40;i++){
+        const p=document.createElement("div");
+        p.classList.add("particle");
+        document.body.appendChild(p);
+
+        p.style.background = colors[Math.floor(Math.random()*colors.length)];
+
+        const angle=Math.random()*2*Math.PI;
+        const dx=Math.cos(angle)*200;
+        const dy=Math.sin(angle)*200;
+
+        p.style.left=x+"px";
+        p.style.top=y+"px";
+
+        p.animate([
+            {transform:"translate(0,0)",opacity:1},
+            {transform:`translate(${dx}px,${dy}px)`,opacity:0}
+        ],{duration:1000});
+
+        setTimeout(()=>p.remove(),1000);
+    }
+}
+
+/* YES click - show slideshow button */
+document.getElementById("yesBtn").onclick=()=>{
+    document.getElementById("bgMusic").play();
+    document.getElementById("card").innerHTML=`
+        <h1>You made me the happiest ❤️</h1>
+        <h2>Our love story is my favourite 🥹</h2>
+        <button class="btn primary" id="memoryBtn">
+        Let's relive our beautiful journey together ✨
+        </button>
+    `;
+    setInterval(()=>{
+        createFirework(Math.random()*window.innerWidth,
+                       Math.random()*window.innerHeight/2);
+    },600);
+
+    setTimeout(()=>{
+        document.getElementById("memoryBtn").onclick=showSlide;
+    },200);
+};
+
+/* ===== WORKING SLIDESHOW FUNCTION WITH LOVE LETTER ===== */
+function showSlide(){
+    const totalSlides = 16;
+    const slideContainer = document.createElement('div');
+    slideContainer.innerHTML = `
+        <img id="slideImage" class="slide" src="img1.jpg">
+        <p id="slideMessage">Our registered marriage photo ❤️</p>
+    `;
+    document.getElementById("card").innerHTML = `<h1>Our Beautiful Memories 📸</h1>`;
+    document.getElementById("card").appendChild(slideContainer);
+
+    const slideImage = document.getElementById('slideImage');
+    const slideMessage = document.getElementById('slideMessage');
+
+    const messages=[
+        "Our registered marriage photo ❤️",
+        "Our muhurtham pic 🥰",
+        "Wedding photoshoot memories 💕",
+        "Under the northern lights together 🌌",
+        "Beautiful day at Lake Bled 🌊",
+        "Smiles at the tulip gardens 🌷",
+        "Exploring Salzburg salt mine ⛏️",
+        "Fun time at Baden-Baden 🎡",
+        "Adventures in Malta 🏝️",
+        "Posing at the Leaning Tower of Pisa",
+        "Romantic memories in Venice 🚤",
+        "Our first anniversary ❤️🎉",
+        "Maternity photoshoot glow 🤰💖",
+        "Family complete with a tiny hand 🍼",
+        "First picture as three of us 👨‍👩‍👧",
+        "Cute and complete family forever 💕"
+    ];
+
+    let index = 0;
+
+    function showNext(){
+        if(index < totalSlides){
+            slideImage.src = `img${index+1}.jpg`;
+            slideMessage.innerText = messages[index];
+            index++;
+            setTimeout(showNext,4000);
+        } else {
+            // Final message after last slide
+            slideMessage.innerText = "Let's celebrate more Valentines together until we grow old 💖🥰";
+
+            // Create love letter button
+            const loveBtn = document.createElement('button');
+            loveBtn.className = 'btn primary';
+            loveBtn.innerText = "Open our little love note 💌";
+
+            const loveLetter = document.createElement('p');
+            loveLetter.id = 'loveLetter';
+            loveLetter.style.display = 'none';
+            loveLetter.innerHTML = `
+💌 From parents’ hands our paths first met,<br>
+Through video calls, our hearts were set.<br>
+Miles apart, yet love grew strong,<br>
+A bond so deep, a lifelong song.<br><br>
+We tied the knot, said vows so true,<br>
+Then off to Germany, just us two.<br>
+Honeymoon adventures, laughter and cheer,<br>
+Every moment precious, holding you near.<br><br>
+Through every journey, hand in hand we grew,<br>
+And soon our hearts welcomed Rishu too.<br>
+Our love keeps blooming, day by day,<br>
+Forever together, come what may. 💖
+            `;
+
+            loveBtn.onclick = ()=>{
+                loveLetter.style.display='block';
+                loveBtn.style.display='none';
+            };
+
+            document.getElementById("card").appendChild(loveBtn);
+            document.getElementById("card").appendChild(loveLetter);
+        }
+    }
+
+    showNext();
+}
+</script>
+</body>
+</html>
